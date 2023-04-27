@@ -1,0 +1,7 @@
+@import url("../blocks/page/page.css");
+
+h1 {
+  color: red;
+  border: aqua solid 1px;
+}
+

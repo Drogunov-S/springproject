@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="page" type="org.springframework.data.domain.Page<ru.drogunov.springproject.model.entity.Task>"*/-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.6.2/css/bootstrap.min.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/static/css/pages/tasks.css}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <title>Main page</title>
+</head>
+<body class="page">
+<h1 th:text="#{tasks.title}"/>
+<a th:href="@{/?lang=ru}" class="btn btn-secondary btn-lg" tabindex="-1" role="button" aria-disabled="true">RU</a>
+<a th:href="@{/?lang=en}" class="btn btn-secondary btn-lg" tabindex="-1" role="button" aria-disabled="true">EN</a>
+<main class="content">
+  <form method="get" action="/">
+    <!--   TODO not work -->
+    <!-- <select>
+       <option th:name="size" th:value="${page.size}" th:text="${page.size}"></option>
+       <option><a th:href="@{/?size=5}">5</a></option>
+       <option><a th:href="@{/?size=10}">10</a></option>
+       <option><a th:href="@{/?size=50}">50</a></option>
+     </select>-->
+  </form>
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col" th:text="#{tasks.id}"/>
+      <th scope="col" th:text="#{tasks.description}"/>
+      <th scope="col" th:text="#{tasks.status}"/>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tr class="task-row" th:each="task : ${page.content}">
+      <th class="task__id">[[${task.id}]]</th>
+      <td class="task__description">[[${task.description}]]</td>
+      <td class="task__status">[[${task.status}]]</td>
+      <td>
+        <button class="edit-todo" th:value="${task.id}" th:text="#{tasks.edit}"></button>
+      </td>
+      <td>
+        <form th:method="DELETE" th:action="@{/{id}(id=${task.id})}">
+          <button th:text="#{tasks.delete}" type="submit"></button>
+        </form>
+      </td>
+  </table>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link"
+           th:href="@{/?page={number}(number=${(page.getNumber() == 0) ? '#' : page.getNumber() - 1})}"
+           th:text="#{tasks.previous}"/>
+      </li>
+      <li th:each="numberPage : ${#numbers.sequence(0, page.getTotalPages() - 1)}"
+          class="page-item">
+        <a class="page-link" th:href="@{/?page={number}(number=${numberPage})}"
+           th:text="${numberPage}"/>
+      </li>
+      <li class="page-item">
+        <a class="page-link"
+           th:href="@{/?page={number}(number=${(page.getNumber() == page.getTotalPages() - 1) ? '#' : page.getNumber() + 1})}"
+           th:text="#{tasks.next}"/>
+      </li>
+    </ul>
+  </nav>
+</main>
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/Api.js}"></script>
+</body>
+</html>
